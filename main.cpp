@@ -1745,6 +1745,10 @@ void CHLMaster::Packet_QueryVAC(void)
 {
 	unsigned int i = 0;
 	unsigned char msgbuf[2048];
+
+	msg_readcount = 6;
+	unsigned int random = MSG_ReadLong();
+	
 	msgbuf[0] = 0xFF;
 	msgbuf[1] = 0xFF;
 	msgbuf[2] = 0xFF;
@@ -1752,10 +1756,13 @@ void CHLMaster::Packet_QueryVAC(void)
 	i += 4;
 
 	msgbuf[4] = M2C_ISVALIDMD5;
-	msgbuf[5] = 0xA;
+	msgbuf[5] = 0;
 	i += (sizeof(unsigned char) * 2);
-	*(ULONG *)&msgbuf[6] = -1;
+	*(ULONG *)&msgbuf[6] = random;
 	i += 4;
+	
+	*(ULONG *)&msgbuf[10] = 1;
+	i += 1;
 
 	Sys_SendPacket(&packet_from, (unsigned char *)msgbuf, i);
 }
